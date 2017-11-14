@@ -3,10 +3,10 @@ package parser
 import (
 	"errors"
 	"io"
-	"github.com/gwuhaolin/livego/parser/mp3"
-	"github.com/gwuhaolin/livego/parser/aac"
-	"github.com/gwuhaolin/livego/av"
-	"github.com/gwuhaolin/livego/parser/h264"
+	"github.com/sunhr/livego/parser/mp3"
+	"github.com/sunhr/livego/parser/aac"
+	"github.com/sunhr/livego/av"
+	"github.com/sunhr/livego/parser/h264"
 )
 
 var (

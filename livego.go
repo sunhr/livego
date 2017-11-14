@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"github.com/gwuhaolin/livego/configure"
-	"github.com/gwuhaolin/livego/protocol/hls"
-	"github.com/gwuhaolin/livego/protocol/httpflv"
-	"github.com/gwuhaolin/livego/protocol/httpopera"
-	"github.com/gwuhaolin/livego/protocol/rtmp"
+	"github.com/sunhr/livego/configure"
+	"github.com/sunhr/livego/protocol/hls"
+	"github.com/sunhr/livego/protocol/httpflv"
+	"github.com/sunhr/livego/protocol/httpopera"
+	"github.com/sunhr/livego/protocol/rtmp"
 	"log"
 	"net"
 	"time"
@@ -121,10 +121,5 @@ func main() {
 	}
 
 	stream := rtmp.NewRtmpStream()
-	hlsServer := startHls()
-	startHTTPFlv(stream)
-	startHTTPOpera(stream)
-
-	startRtmp(stream, hlsServer)
-	//startRtmp(stream, nil)
+	startRtmp(stream, nil)
 }

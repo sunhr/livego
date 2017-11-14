@@ -2,9 +2,9 @@ package rtmp
 
 import (
 	"errors"
-	"github.com/gwuhaolin/livego/av"
-	"github.com/gwuhaolin/livego/protocol/rtmp/cache"
-	"github.com/gwuhaolin/livego/protocol/rtmp/rtmprelay"
+	"github.com/sunhr/livego/av"
+	"github.com/sunhr/livego/protocol/rtmp/cache"
+	"github.com/sunhr/livego/protocol/rtmp/rtmprelay"
 	"github.com/orcaman/concurrent-map"
 	"log"
 	"strings"

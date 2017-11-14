@@ -6,8 +6,8 @@ import (
 	"net"
 	"net/http"
 	"log"
-	"github.com/gwuhaolin/livego/av"
-	"github.com/gwuhaolin/livego/protocol/rtmp"
+	"github.com/sunhr/livego/av"
+	"github.com/sunhr/livego/protocol/rtmp"
 )
 
 type Server struct {

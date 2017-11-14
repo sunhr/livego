@@ -4,11 +4,11 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/gwuhaolin/livego/av"
-	"github.com/gwuhaolin/livego/configure"
-	"github.com/gwuhaolin/livego/container/flv"
-	"github.com/gwuhaolin/livego/protocol/rtmp/core"
-	"github.com/gwuhaolin/livego/utils/uid"
+	"github.com/sunhr/livego/av"
+	"github.com/sunhr/livego/configure"
+	"github.com/sunhr/livego/container/flv"
+	"github.com/sunhr/livego/protocol/rtmp/core"
+	"github.com/sunhr/livego/utils/uid"
 	"log"
 	"net"
 	"net/url"
@@ -65,18 +65,21 @@ func (c *Client) GetHandle() av.Handler {
 }
 
 type Server struct {
-	handler av.Handler
-	getter  av.GetWriter
+	handler    av.Handler
+	getter     av.GetWriter
+	streamName string
 }
 
-func NewRtmpServer(h av.Handler, getter av.GetWriter) *Server {
+func NewRtmpServer(h av.Handler, getter av.GetWriter, streamName string) *Server {
 	return &Server{
-		handler: h,
-		getter:  getter,
+		handler:    h,
+		getter:     getter,
+		streamName: streamName,
 	}
 }
 
 func (s *Server) Serve(listener net.Listener) (err error) {
+
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println("rtmp serve panic: ", r)
@@ -110,18 +113,18 @@ func (s *Server) handleConn(conn *core.Conn) error {
 		return err
 	}
 
-	appname, _, _ := connServer.GetInfo()
+	appName, streamName, _ := connServer.GetInfo()
 
-	if ret := configure.CheckAppName(appname); !ret {
-		err := errors.New("application name=%s is not configured")
+	if appName != "live" || streamName != s.streamName {
+		err := errors.New("invalid AppName or StreamName")
 		conn.Close()
-		log.Println("CheckAppName err:", err)
+		log.Println(err)
 		return err
 	}
 
 	log.Printf("handleConn: IsPublisher=%v", connServer.IsPublisher())
 	if connServer.IsPublisher() {
-		if pushlist, ret := configure.GetStaticPushUrlList(appname); ret && (pushlist != nil) {
+		if pushlist, ret := configure.GetStaticPushUrlList(appName); ret && (pushlist != nil) {
 			log.Printf("GetStaticPushUrlList: %v", pushlist)
 		}
 		reader := NewVirReader(connServer)
@@ -168,8 +171,8 @@ type StaticsBW struct {
 }
 
 type VirWriter struct {
-	Uid    string
-	closed bool
+	Uid         string
+	closed      bool
 	av.RWBaser
 	conn        StreamReadWriteCloser
 	packetQueue chan *av.Packet
@@ -344,7 +347,7 @@ func (v *VirWriter) Close(err error) {
 }
 
 type VirReader struct {
-	Uid string
+	Uid        string
 	av.RWBaser
 	demuxer    *flv.Demuxer
 	conn       StreamReadWriteCloser
