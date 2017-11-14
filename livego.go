@@ -54,10 +54,10 @@ func startRtmp(stream *rtmp.RtmpStream, hlsServer *hls.Server) {
 	var rtmpServer *rtmp.Server
 
 	if hlsServer == nil {
-		rtmpServer = rtmp.NewRtmpServer(stream, nil)
+		rtmpServer = rtmp.NewRtmpServer(stream, nil, "live", "movie")
 		log.Printf("hls server disable....")
 	} else {
-		rtmpServer = rtmp.NewRtmpServer(stream, hlsServer)
+		rtmpServer = rtmp.NewRtmpServer(stream, hlsServer, "live", "movie")
 		log.Printf("hls server enable....")
 	}
 

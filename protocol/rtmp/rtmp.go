@@ -67,13 +67,15 @@ func (c *Client) GetHandle() av.Handler {
 type Server struct {
 	handler    av.Handler
 	getter     av.GetWriter
+	appName    string
 	streamName string
 }
 
-func NewRtmpServer(h av.Handler, getter av.GetWriter, streamName string) *Server {
+func NewRtmpServer(h av.Handler, getter av.GetWriter, appName, streamName string) *Server {
 	return &Server{
 		handler:    h,
 		getter:     getter,
+		appName:    appName,
 		streamName: streamName,
 	}
 }
@@ -115,7 +117,7 @@ func (s *Server) handleConn(conn *core.Conn) error {
 
 	appName, streamName, _ := connServer.GetInfo()
 
-	if appName != "live" || streamName != s.streamName {
+	if appName != s.appName || streamName != s.streamName {
 		err := errors.New("invalid AppName or StreamName")
 		conn.Close()
 		log.Println(err)
